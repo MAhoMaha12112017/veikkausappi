@@ -1,8 +1,12 @@
 import React from 'react';
 
-const Tulos = () => {
+const Tulos = ({onResultChange, labeli}) => {
+
   return (
-    <div>Tulos</div>
+    <div>
+      <label htmlFor={labeli}>{labeli}</label>
+      <input type="number" min="0" onChange={onResultChange}/>
+    </div>
   )
 }
 

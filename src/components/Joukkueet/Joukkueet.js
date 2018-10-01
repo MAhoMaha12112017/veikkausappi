@@ -1,10 +1,11 @@
 import React from 'react';
 // import joukkuelista from './joukkueet.json';
 
-const Joukkueet = ({onTeamChanged, name}) => {
+const Joukkueet = ({onTeamChange, labeli}) => {
   return (
     <div>
-      <select name={name} onChange={onTeamChanged}>
+      <label htmlFor={labeli}>{labeli}</label>
+      <select id={labeli} onChange={onTeamChange}>
         <option value="ARS">Arsenal</option>
         <option value="BOU">Bournemouth</option>
         <option value="BHA">Brighton & Howe</option>
