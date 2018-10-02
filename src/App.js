@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import Joukkueet from './components/Joukkueet/Joukkueet';
 import Tulos from './components/Tulos/Tulos';
+import Liigat from './components/Liigat/Liigat';
 
 class App extends Component {
   constructor (props) {
@@ -46,6 +47,10 @@ class App extends Component {
   onAwayTeamChange = (event) => { // todo: yhdistä tämä ja alempi
     this.setState({awayTeam: event.target.value})
   }
+  
+  onLeagueChange = (event) => {
+      this.setState({league: event.target.value})
+  }
 
   onButtonSave = () => {
     console.log('save data');
@@ -60,6 +65,7 @@ class App extends Component {
           <h1 className="App-title">Veikkausappi</h1>
         </header>
         <div>
+          <Liigat onLeagueChange={this.onLeagueChange} labeli="League" />
           <Tulos onResultChange={this.onChangeRound} labeli="Round" />
           <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" />
           <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" />
