@@ -4,6 +4,7 @@ import './App.css';
 import Joukkueet from './components/Joukkueet/Joukkueet';
 import Tulos from './components/Tulos/Tulos';
 import Liigat from './components/Liigat/Liigat';
+import {premierLeagueTeams} from './components/Joukkueet/joukkuelista.js';
 
 class App extends Component {
   constructor (props) {
@@ -67,8 +68,8 @@ class App extends Component {
         <div>
           <Liigat onLeagueChange={this.onLeagueChange} labeli="League" />
           <Tulos onResultChange={this.onChangeRound} labeli="Round" />
-          <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" />
-          <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" />
+          <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" teams={premierLeagueTeams}/>
+          <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" teams={premierLeagueTeams}/>
           <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" />
           <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" />
           <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" />
