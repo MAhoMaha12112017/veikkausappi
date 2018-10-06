@@ -6,39 +6,41 @@ import Tulos from './components/Tulos/Tulos';
 import Liigat from './components/Liigat/Liigat';
 import {premierLeagueTeams} from './components/Joukkueet/joukkuelista.js';
 
+const defaults = {
+  league: 'PREMIERLEAGUE',
+  round: 0,
+  homeTeam: premierLeagueTeams[0].abbr,
+  awayTeam: premierLeagueTeams[0].abbr,
+  homeGoals: 0,
+  awayGoals: 0,
+  homexG: 0,
+  awayxG: 0
+}
+
 class App extends Component {
   constructor (props) {
     super(props);
-    this.state = {
-      league: '',
-      round: 0,
-      homeTeam: '',
-      awayTeam: '',
-      homeGoals: 0,
-      awayGoals: 0,
-      homexG: 0,
-      awayxG: 0
-    }
+    this.state = defaults;
   }
 
   onChangehomeGoals = (event) => {
-    this.setState({homeGoals: event.target.value})
+    this.setState({homeGoals: Number(event.target.value)})
   }
 
   onChangeawayGoals = (event) => {
-    this.setState({awayGoals: event.target.value})
+    this.setState({awayGoals: Number(event.target.value)})
   }
 
   onChangehomexG = (event) => {
-    this.setState({homexG: event.target.value})
+    this.setState({homexG: Number(event.target.value)})
   }
 
   onChangeawayxG = (event) => {
-    this.setState({awayxG: event.target.value})
+    this.setState({awayxG: Number(event.target.value)})
   }
 
   onChangeRound = (event) => {
-    this.setState({round: event.target.value})
+    this.setState({round: Number(event.target.value)})
   }
 
   onHomeTeamChange = (event) => { // todo: yhdistä tämä ja alempi
@@ -54,8 +56,18 @@ class App extends Component {
   }
 
   onButtonSave = () => {
-    console.log('save data');
-    console.log(this.state)
+    fetch('http://localhost:3001/match', {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify(this.state) // body data type must match "Content-Type" header
+    })
+    .then((res) => res.json())
+    .then(console.log);
+  }
+
+  onClickReset = () => {
+    this.setState(defaults);
+    console.log('onClickReset')
   }
 
   render() {
@@ -66,15 +78,16 @@ class App extends Component {
           <h1 className="App-title">Veikkausappi</h1>
         </header>
         <div>
-          <Liigat onLeagueChange={this.onLeagueChange} labeli="League" />
-          <Tulos onResultChange={this.onChangeRound} labeli="Round" />
-          <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" teams={premierLeagueTeams}/>
-          <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" teams={premierLeagueTeams}/>
-          <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" />
-          <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" />
-          <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" />
-          <Tulos onResultChange={this.onChangeawayxG} labeli="Away xG" />
+          <Liigat onLeagueChange={this.onLeagueChange} labeli="League" currentValue={this.state.league}/>
+          <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
+          <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" teams={premierLeagueTeams} currentValue={this.state.homeTeam}/>
+          <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" teams={premierLeagueTeams} currentValue={this.state.awayTeam}/>
+          <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" currentValue={this.state.homeGoals}/>
+          <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" currentValue={this.state.awayGoals}/>
+          <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" currentValue={this.state.homexG}/>
+          <Tulos onResultChange={this.onChangeawayxG} labeli="Away xG" currentValue={this.state.awayxG}/>
           <button onClick={this.onButtonSave}>Lähetä</button>
+          <button type="button" onClick={this.onClickReset}>Tyhjennä</button>
         </div>
       </div>
     );
@@ -84,7 +97,7 @@ class App extends Component {
 export default App;
 
 // TODO:
-// yhdistä funktiot
+// yhdistä funktiot?
 // nolla defaultiksi, roundilla 1
 // muotoilut
 // lisää liiga - tulisiko olla yksi listaelementti: liiga + joukkue
