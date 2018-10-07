@@ -70,7 +70,7 @@ class App extends Component {
     .then((data) => {
       console.log(data);
       if (data.id) {
-        alert(`Match between ${data.hometeam} and ${data.awayteam} added to database`)
+        alert(`Match between ${data.hometeamabbr} and ${data.awayteamabbr} added to database`)
       } else {
         alert(`Match could not be added to database`);
       }
