@@ -4,13 +4,13 @@ import './App.css';
 import Joukkueet from './components/Joukkueet/Joukkueet';
 import Tulos from './components/Tulos/Tulos';
 import Liigat from './components/Liigat/Liigat';
-import {premierLeagueTeams} from './components/Joukkueet/joukkuelista.js';
+import teamList from './components/Joukkueet/joukkuelista.js';
 
 const defaults = {
-  league: 'PREMIERLEAGUE',
+  league: teamList[0].league,
   round: 0,
-  homeTeam: premierLeagueTeams[0].abbr,
-  awayTeam: premierLeagueTeams[0].abbr,
+  homeTeam: teamList[0].abbr,
+  awayTeam: teamList[1].abbr,
   homeGoals: 0,
   awayGoals: 0,
   homexG: 0,
@@ -21,6 +21,11 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = defaults;
+  }
+
+  componentDidMount() {
+    const filteredList = teamList.filter(team => team.league === this.state.league);
+    this.setState({ filteredTeams: filteredList});
   }
 
   onChangehomeGoals = (event) => {
@@ -52,7 +57,7 @@ class App extends Component {
   }
   
   onLeagueChange = (event) => {
-      this.setState({league: event.target.value})
+    this.setState({league: event.target.value});
   }
 
   onButtonSave = () => {
@@ -77,6 +82,8 @@ class App extends Component {
   }
 
   render() {
+    // const filteredList = teamList.filter(team => team.league === this.state.league);
+
     return (
       <div className="App">
         <header className="App-header">
@@ -86,8 +93,8 @@ class App extends Component {
         <div>
           <Liigat onLeagueChange={this.onLeagueChange} labeli="League" currentValue={this.state.league}/>
           <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
-          <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" teams={premierLeagueTeams} currentValue={this.state.homeTeam}/>
-          <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" teams={premierLeagueTeams} currentValue={this.state.awayTeam}/>
+          <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" league={this.state.league} currentValue={this.state.homeTeam}/>
+          <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" league={this.state.league} currentValue={this.state.awayTeam}/>
           <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" currentValue={this.state.homeGoals}/>
           <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" currentValue={this.state.awayGoals}/>
           <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" currentValue={this.state.homexG}/>
