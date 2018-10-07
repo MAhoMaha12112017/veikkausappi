@@ -62,12 +62,18 @@ class App extends Component {
       body: JSON.stringify(this.state) // body data type must match "Content-Type" header
     })
     .then((res) => res.json())
-    .then(console.log);
+    .then((data) => {
+      console.log(data);
+      if (data.id) {
+        alert(`Match between ${data.hometeam} and ${data.awayteam} added to database`)
+      } else {
+        alert(`Match could not be added to database`);
+      }
+    });
   }
 
   onClickReset = () => {
     this.setState(defaults);
-    console.log('onClickReset')
   }
 
   render() {
@@ -87,7 +93,7 @@ class App extends Component {
           <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" currentValue={this.state.homexG}/>
           <Tulos onResultChange={this.onChangeawayxG} labeli="Away xG" currentValue={this.state.awayxG}/>
           <button onClick={this.onButtonSave}>Lähetä</button>
-          <button type="button" onClick={this.onClickReset}>Tyhjennä</button>
+          <button onClick={this.onClickReset} type="button">Tyhjennä</button>
         </div>
       </div>
     );
@@ -98,6 +104,5 @@ export default App;
 
 // TODO:
 // yhdistä funktiot?
-// nolla defaultiksi, roundilla 1
 // muotoilut
 // lisää liiga - tulisiko olla yksi listaelementti: liiga + joukkue

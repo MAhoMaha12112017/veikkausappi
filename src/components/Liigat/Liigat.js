@@ -1,7 +1,7 @@
 import React from 'react';
 // import liigalista from './liiga.json';
 
-const Liigat = ({onLeagueChange, labeli, league, currentValue}) => {
+const Liigat = ({onLeagueChange, labeli, currentValue}) => {
   return (
     <div>
       <label htmlFor={labeli}>{labeli}</label>
