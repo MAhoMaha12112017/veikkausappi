@@ -23,11 +23,6 @@ class App extends Component {
     this.state = defaults;
   }
 
-  componentDidMount() {
-    const filteredList = teamList.filter(team => team.league === this.state.league);
-    this.setState({ filteredTeams: filteredList});
-  }
-
   onChangehomeGoals = (event) => {
     this.setState({homeGoals: Number(event.target.value)})
   }
@@ -64,7 +59,7 @@ class App extends Component {
     fetch('http://localhost:3001/match', {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify(this.state) // body data type must match "Content-Type" header
+      body: JSON.stringify(this.state) 
     })
     .then((res) => res.json())
     .then((data) => {
@@ -82,7 +77,6 @@ class App extends Component {
   }
 
   render() {
-    // const filteredList = teamList.filter(team => team.league === this.state.league);
 
     return (
       <div className="App">
@@ -112,4 +106,4 @@ export default App;
 // TODO:
 // yhdistä funktiot?
 // muotoilut
-// lisää liiga - tulisiko olla yksi listaelementti: liiga + joukkue
+// lisää liiga - tulisiko olla yksi listaelementti: liiga + joukkue children-tekn?

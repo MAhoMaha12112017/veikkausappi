@@ -101,6 +101,11 @@ const teamList =
       league: "PREMIERLEAGUE"
     },
     {
+      abbr:"WOL",
+      name:"Wolverhampton Wanderers",
+      league: "PREMIERLEAGUE"
+    },
+    {
       abbr:"ASTV",
       name:"Aston Villa",
       league: "CHAMPIONSHIP"
