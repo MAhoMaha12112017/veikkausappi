@@ -19,6 +19,10 @@ const teamList =
       abbr:"BUR", 
       name:"Burnley",
       league: "PREMIERLEAGUE"
+    },    {
+      abbr:"CAR", 
+      name:"Cardiff City",
+      league: "PREMIERLEAGUE"
     },
     {
       abbr:"CHE", 
