@@ -40,6 +40,11 @@ const teamList =
       league: "PREMIERLEAGUE"
     },
     {
+      abbr:"FUL",
+      name:"Fulham",
+      league: "PREMIERLEAGUE"
+    },
+    {
       abbr:"HUD",
       name:"Huddersfield Town",
       league: "PREMIERLEAGUE"
@@ -75,16 +80,6 @@ const teamList =
       league: "PREMIERLEAGUE"
     },
     {
-      abbr:"STK",
-      name:"Stoke City",
-      league: "PREMIERLEAGUE"
-    },
-    {
-      abbr:"SWA",
-      name:"Swansea",
-      league: "PREMIERLEAGUE"
-    },
-    {
       abbr:"TOT",
       name:"Tottenham",
       league: "PREMIERLEAGUE"
@@ -92,11 +87,6 @@ const teamList =
     {
       abbr:"WAT",
       name:"Watford",
-      league: "PREMIERLEAGUE"
-    },
-    {
-      abbr:"WBA",
-      name:"West Brom",
       league: "PREMIERLEAGUE"
     },
     {
@@ -210,17 +200,17 @@ const teamList =
       league: "CHAMPIONSHIP"
     },
     {
-      abbr:"STOC",
+      abbr:"STK",
       name:"Stoke City",
       league: "CHAMPIONSHIP"
     },
     {
-      abbr:"SWAC",
+      abbr:"SWA",
       name:"Swansea City",
       league: "CHAMPIONSHIP"
     },
     {
-      abbr:"WBAL",
+      abbr:"WBA",
       name:"West Bromwich Albion",
       league: "CHAMPIONSHIP"
     },

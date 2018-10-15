@@ -26,31 +26,24 @@ class App extends Component {
   onChangehomeGoals = (event) => {
     this.setState({homeGoals: Number(event.target.value)})
   }
-
   onChangeawayGoals = (event) => {
     this.setState({awayGoals: Number(event.target.value)})
   }
-
   onChangehomexG = (event) => {
     this.setState({homexG: Number(event.target.value)})
   }
-
   onChangeawayxG = (event) => {
     this.setState({awayxG: Number(event.target.value)})
   }
-
   onChangeRound = (event) => {
     this.setState({round: Number(event.target.value)})
   }
-
   onHomeTeamChange = (event) => { // todo: yhdistä tämä ja alempi
     this.setState({homeTeam: event.target.value})
   }
-
   onAwayTeamChange = (event) => { // todo: yhdistä tämä ja alempi
     this.setState({awayTeam: event.target.value})
   }
-  
   onLeagueChange = (event) => {
     this.setState({league: event.target.value});
   }
@@ -77,7 +70,6 @@ class App extends Component {
   }
 
   render() {
-
     return (
       <div className="App">
         <header className="App-header">
