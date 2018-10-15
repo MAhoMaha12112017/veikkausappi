@@ -7,20 +7,35 @@ import Tulos from './components/Tulos/Tulos';
 import Liigat from './components/Liigat/Liigat';
 import HomeAway from './components/HomeAway/HomeAway';
 import teamList from './components/Joukkueet/joukkuelista.js';
-import footballicon from './icons8-soccer-ball-48.png';
+
 
 const defaults = {
   id: 0,
   league: teamList[0].league,
   round: 0,
-  homeTeam: teamList[0].abbr,
-  awayTeam: teamList[1].abbr,
+  homeTeam: '',
+  awayTeam: '',
   homeGoals: 0,
   awayGoals: 0,
   homexG: 0,
   awayxG: 0,
-  homeaway: 'all'
+  homeaway: 'all',
+  use: 'save'
 }
+// const defaults = {
+//   id: 0,
+//   league: teamList[0].league,
+//   round: 0,
+//   homeTeam: teamList[0].abbr,
+//   awayTeam: teamList[1].abbr,
+//   homeGoals: 0,
+//   awayGoals: 0,
+//   homexG: 0,
+//   awayxG: 0,
+//   homeaway: 'all',
+//   use: 'save'
+// }
+
 
 class App extends Component {
   constructor (props) {
@@ -58,6 +73,14 @@ class App extends Component {
   onHomeAwayChange = (event) => {
     this.setState({homeaway: event.target.value});
   }
+  onUseChange = (use) => {
+    this.setState({use});
+    // if (use === 'search') {
+    //   this.setState({...searchDefaults, use: use});
+    // } else if (use === 'save') {
+    //   this.setState({...defaults, use: use});
+    // }
+  }
 
   onButtonSave = () => {
     fetch('http://localhost:3001/match', {
@@ -87,21 +110,32 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Veikkausappi</h1>
         </header>
-        <Navigation />
+        <Navigation onUseChange={this.onUseChange} />
         <div>
-          <img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/>
-          <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
+          
           <Liigat onLeagueChange={this.onLeagueChange} labeli="League" currentValue={this.state.league}/>
           <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
-          <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" league={this.state.league} currentValue={this.state.homeTeamOnly}/>
-          <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" league={this.state.league} currentValue={!this.state.awayTeam}/>
-          <HomeAway onHomeAwayChange={this.onHomeAwayChange} labeli="Home / Away" currentValue={this.state.homeaway} />
-          <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" currentValue={this.state.homeGoals}/>
-          <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" currentValue={this.state.awayGoals}/>
-          <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" currentValue={this.state.homexG}/>
-          <Tulos onResultChange={this.onChangeawayxG} labeli="Away xG" currentValue={this.state.awayxG}/>
-          <button onClick={this.onButtonSave}>Lähetä</button>
-          <button onClick={this.onClickReset} type="button">Tyhjennä</button>
+        {this.state.use === 'search' 
+          ?
+            <div>
+              <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" league={this.state.league} currentValue={this.state.homeTeam}/>
+              <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" league={this.state.league} currentValue={this.state.awayTeam}/>
+              <HomeAway onHomeAwayChange={this.onHomeAwayChange} labeli="Home / Away" currentValue={this.state.homeaway} />
+              <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
+              <button onClick={this.onButtonSearch}>Hae</button>
+            </div>
+          :
+            <div>
+              <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" league={this.state.league} currentValue={this.state.homeTeam}/>
+              <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" league={this.state.league} currentValue={this.state.awayTeam}/>
+              <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" currentValue={this.state.homeGoals}/>
+              <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" currentValue={this.state.awayGoals}/>
+              <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" currentValue={this.state.homexG}/>
+              <Tulos onResultChange={this.onChangeawayxG} labeli="Away xG" currentValue={this.state.awayxG}/>
+              <button onClick={this.onButtonSave}>Lähetä</button>
+              <button onClick={this.onClickReset} type="button">Tyhjennä</button>
+            </div>
+        } 
         </div>
       </div>
     );
