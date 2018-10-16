@@ -10,7 +10,7 @@ const Joukkueet = (props) => {
       <div>
         <label htmlFor={labeli}>{labeli}</label>
         <select id={labeli} onChange={onTeamChange} value={currentValue}>
-          <option value='' key='empty'>Make your selection</option>
+          <option value='' key='empty'>No selection</option>
           {filteredTeams.map((team) => {
             return <option value={team.abbr} key={team.abbr}>{team.name}</option>;
           })}

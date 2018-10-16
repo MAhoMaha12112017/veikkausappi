@@ -22,20 +22,6 @@ const defaults = {
   homeaway: 'all',
   use: 'save'
 }
-// const defaults = {
-//   id: 0,
-//   league: teamList[0].league,
-//   round: 0,
-//   homeTeam: teamList[0].abbr,
-//   awayTeam: teamList[1].abbr,
-//   homeGoals: 0,
-//   awayGoals: 0,
-//   homexG: 0,
-//   awayxG: 0,
-//   homeaway: 'all',
-//   use: 'save'
-// }
-
 
 class App extends Component {
   constructor (props) {
@@ -74,12 +60,17 @@ class App extends Component {
     this.setState({homeaway: event.target.value});
   }
   onUseChange = (use) => {
-    this.setState({use});
-    // if (use === 'search') {
-    //   this.setState({...searchDefaults, use: use});
-    // } else if (use === 'save') {
-    //   this.setState({...defaults, use: use});
-    // }
+    if (use ==='search') {
+      this.setState({
+        use,
+        homeGoals: 0, // voisko laittaa null / undefined?
+        awayGoals: 0,
+        homexG: 0,
+        awayxG: 0,
+      });
+    } else if (use === 'save') {
+      this.setState({use})
+    }
   }
 
   onButtonSave = () => {
@@ -99,8 +90,37 @@ class App extends Component {
     });
   }
 
+  onButtonSearch = () => {
+    const searchBody = {
+      id: this.state.id || undefined,
+      league: this.state.league || undefined,
+      round: this.state.round || undefined,
+      team1: this.state.homeTeam || undefined,
+      team2: this.state.awayTeam || undefined,
+      homeaway: this.state.homeaway || undefined
+    }
+    console.log(searchBody);
+
+
+    fetch('http://localhost:3001/matchsearch', {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify(searchBody) 
+    })
+    .then((res)=> res.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => console.log(err));
+  }
+
+
   onClickReset = () => {
     this.setState(defaults);
+  }
+
+  onClickSearchReset = () => {
+    this.setState({...defaults, use: 'search'});
   }
 
   render() {
@@ -123,6 +143,7 @@ class App extends Component {
               <HomeAway onHomeAwayChange={this.onHomeAwayChange} labeli="Home / Away" currentValue={this.state.homeaway} />
               <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
               <button onClick={this.onButtonSearch}>Hae</button>
+              <button onClick={this.onClickSearchReset} type="button">Tyhjennä</button>
             </div>
           :
             <div>
