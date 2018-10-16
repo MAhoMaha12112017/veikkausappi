@@ -20,6 +20,7 @@ const defaults = {
   homexG: 0,
   awayxG: 0,
   homeaway: 'all',
+  selectedTeam: '',
   use: 'save'
 }
 
@@ -59,6 +60,9 @@ class App extends Component {
   onHomeAwayChange = (event) => {
     this.setState({homeaway: event.target.value});
   }
+  onSelectedTeamChange = (event) => {
+    this.setState({selectedTeam: event.target.value});
+  }
   onUseChange = (use) => {
     if (use ==='search') {
       this.setState({
@@ -67,6 +71,7 @@ class App extends Component {
         awayGoals: 0,
         homexG: 0,
         awayxG: 0,
+        selectedTeam: ''
       });
     } else if (use === 'save') {
       this.setState({use})
@@ -97,10 +102,10 @@ class App extends Component {
       round: this.state.round || undefined,
       team1: this.state.homeTeam || undefined,
       team2: this.state.awayTeam || undefined,
-      homeaway: this.state.homeaway || undefined
+      homeaway: this.state.homeaway || undefined,
+      team: this.state.selectedTeam || undefined
     }
     console.log(searchBody);
-
 
     fetch('http://localhost:3001/matchsearch', {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -114,13 +119,14 @@ class App extends Component {
     .catch((err) => console.log(err));
   }
 
-
   onClickReset = () => {
     this.setState(defaults);
   }
-
   onClickSearchReset = () => {
     this.setState({...defaults, use: 'search'});
+  }
+  onClickTable = () => {
+    console.log('onClickTable');
   }
 
   render() {
@@ -130,17 +136,21 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Veikkausappi</h1>
         </header>
-        <Navigation onUseChange={this.onUseChange} />
+        <Navigation onUseChange={this.onUseChange} onClickTable={this.onClickTable}/>
+
         <div>
-          
           <Liigat onLeagueChange={this.onLeagueChange} labeli="League" currentValue={this.state.league}/>
           <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
         {this.state.use === 'search' 
           ?
             <div>
-              <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" league={this.state.league} currentValue={this.state.homeTeam}/>
-              <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" league={this.state.league} currentValue={this.state.awayTeam}/>
+              <p>Team Pair Data:</p>
+              <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Team 1" league={this.state.league} currentValue={this.state.homeTeam}/>
+              <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Team 2" league={this.state.league} currentValue={this.state.awayTeam}/>
+              <hr />
+              <Joukkueet onTeamChange={this.onSelectedTeamChange} labeli="Single Team Data" league={this.state.league} currentValue={this.state.selectedTeam}/>
               <HomeAway onHomeAwayChange={this.onHomeAwayChange} labeli="Home / Away" currentValue={this.state.homeaway} />
+              <hr />
               <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
               <button onClick={this.onButtonSearch}>Hae</button>
               <button onClick={this.onClickSearchReset} type="button">Tyhjennä</button>
@@ -167,5 +177,4 @@ export default App;
 
 // TODO:
 // yhdistä funktiot?
-// muotoilut
 // lisää liiga - tulisiko olla yksi listaelementti: liiga + joukkue children-tekn?
