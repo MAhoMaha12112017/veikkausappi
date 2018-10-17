@@ -21,7 +21,8 @@ const defaults = {
   awayxG: 0,
   homeaway: 'all',
   selectedTeam: '',
-  use: 'save'
+  use: 'save',
+  results: {}
 }
 
 class App extends Component {
@@ -114,7 +115,12 @@ class App extends Component {
     })
     .then((res)=> res.json())
     .then((data) => {
-      console.log(data);
+      if (data[0].id) {
+        console.log(data);
+        this.setState({use: 'results', results: data});
+      } else {
+        alert('data not found')
+      }
     })
     .catch((err) => console.log(err));
   }
@@ -139,33 +145,48 @@ class App extends Component {
         <Navigation onUseChange={this.onUseChange} onClickTable={this.onClickTable}/>
 
         <div>
-          <Liigat onLeagueChange={this.onLeagueChange} labeli="League" currentValue={this.state.league}/>
-          <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
-        {this.state.use === 'search' 
-          ?
-            <div>
-              <p>Team Pair Data:</p>
-              <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Team 1" league={this.state.league} currentValue={this.state.homeTeam}/>
-              <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Team 2" league={this.state.league} currentValue={this.state.awayTeam}/>
-              <hr />
-              <Joukkueet onTeamChange={this.onSelectedTeamChange} labeli="Single Team Data" league={this.state.league} currentValue={this.state.selectedTeam}/>
-              <HomeAway onHomeAwayChange={this.onHomeAwayChange} labeli="Home / Away" currentValue={this.state.homeaway} />
-              <hr />
-              <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
-              <button onClick={this.onButtonSearch}>Hae</button>
-              <button onClick={this.onClickSearchReset} type="button">Tyhjennä</button>
-            </div>
-          :
-            <div>
-              <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" league={this.state.league} currentValue={this.state.homeTeam}/>
-              <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" league={this.state.league} currentValue={this.state.awayTeam}/>
-              <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" currentValue={this.state.homeGoals}/>
-              <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" currentValue={this.state.awayGoals}/>
-              <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" currentValue={this.state.homexG}/>
-              <Tulos onResultChange={this.onChangeawayxG} labeli="Away xG" currentValue={this.state.awayxG}/>
-              <button onClick={this.onButtonSave}>Lähetä</button>
-              <button onClick={this.onClickReset} type="button">Tyhjennä</button>
-            </div>
+        {
+          this.state.use === 'results'
+          ? 
+          <div>
+            <h3>Match Results</h3>
+            <ul>
+            {this.state.results.map((result) => {
+              return (
+                <li key={result.id}>Kierros {result.round}. {result.hometeamabbr} {result.homegoals} - {result.awayteamabbr} {result.awaygoals} xG: {result.homexg} - {result.awayxg} </li>
+              );
+            })}
+            </ul>
+          </div>
+          : (
+            this.state.use === 'search' 
+            ?
+              <div>
+                <Liigat onLeagueChange={this.onLeagueChange} labeli="League" currentValue={this.state.league}/>
+                <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
+                <p>Team Pair Data:</p>
+                <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Team 1" league={this.state.league} currentValue={this.state.homeTeam}/>
+                <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Team 2" league={this.state.league} currentValue={this.state.awayTeam}/>
+                <hr />
+                <Joukkueet onTeamChange={this.onSelectedTeamChange} labeli="Single Team Data" league={this.state.league} currentValue={this.state.selectedTeam}/>
+                <HomeAway onHomeAwayChange={this.onHomeAwayChange} labeli="Home / Away" currentValue={this.state.homeaway} />
+                <hr />
+                <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
+                <button onClick={this.onButtonSearch}>Hae</button>
+                <button onClick={this.onClickSearchReset} type="button">Tyhjennä</button>
+              </div>
+            :
+              <div>
+                <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" league={this.state.league} currentValue={this.state.homeTeam}/>
+                <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" league={this.state.league} currentValue={this.state.awayTeam}/>
+                <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" currentValue={this.state.homeGoals}/>
+                <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" currentValue={this.state.awayGoals}/>
+                <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" currentValue={this.state.homexG}/>
+                <Tulos onResultChange={this.onChangeawayxG} labeli="Away xG" currentValue={this.state.awayxG}/>
+                <button onClick={this.onButtonSave}>Lähetä</button>
+                <button onClick={this.onClickReset} type="button">Tyhjennä</button>
+              </div>
+            )
         } 
         </div>
       </div>
