@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import Joukkueet from './components/Joukkueet/Joukkueet';
 import Navigation from './components/Navigation/Navigation';
@@ -7,6 +7,7 @@ import Tulos from './components/Tulos/Tulos';
 import Liigat from './components/Liigat/Liigat';
 import HomeAway from './components/HomeAway/HomeAway';
 import teamList from './components/Joukkueet/joukkuelista.js';
+import footballicon from './icons8-soccer-ball-48.png';
 
 
 const defaults = {
@@ -134,12 +135,18 @@ class App extends Component {
   onClickTable = () => {
     console.log('onClickTable');
   }
+  onButtonExtendedSingleTeamData = () => {
+    console.log('onButtonExtendedSingleTeamData');
+  }
+  onButtonExtendedTeamPairData = () => {
+    console.log('onButtonExtendedTeamPairData');
+  }
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/>
           <h1 className="App-title">Veikkausappi</h1>
         </header>
         <Navigation onUseChange={this.onUseChange} onClickTable={this.onClickTable}/>
@@ -167,9 +174,11 @@ class App extends Component {
                 <p>Team Pair Data:</p>
                 <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Team 1" league={this.state.league} currentValue={this.state.homeTeam}/>
                 <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Team 2" league={this.state.league} currentValue={this.state.awayTeam}/>
+                <button onClick={this.onButtonExtendedTeamPairData}>Extended Team Pair Data</button>
                 <hr />
-                <Joukkueet onTeamChange={this.onSelectedTeamChange} labeli="Single Team Data" league={this.state.league} currentValue={this.state.selectedTeam}/>
+                <Joukkueet onTeamChange={this.onSelectedTeamChange} labeli="Single Team Match Data" league={this.state.league} currentValue={this.state.selectedTeam}/>
                 <HomeAway onHomeAwayChange={this.onHomeAwayChange} labeli="Home / Away" currentValue={this.state.homeaway} />
+                <button onClick={this.onButtonExtendedSingleTeamData}>Extended Single Team Data</button>
                 <hr />
                 <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
                 <button onClick={this.onButtonSearch}>Hae</button>
