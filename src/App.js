@@ -24,6 +24,7 @@ const defaults = {
   selectedTeam: '',
   use: 'save',
   results: {}
+  // extendedResults: {}
 }
 
 class App extends Component {
@@ -126,6 +127,19 @@ class App extends Component {
     .catch((err) => console.log(err));
   }
 
+  onButtonExtendedSingleTeamData = () => {
+    const searchBody = {team: this.state.selectedTeam || undefined}
+    fetch('http://localhost:3001/teamdata', {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify(searchBody) 
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    })
+  }
+
   onClickReset = () => {
     this.setState(defaults);
   }
@@ -134,9 +148,6 @@ class App extends Component {
   }
   onClickTable = () => {
     console.log('onClickTable');
-  }
-  onButtonExtendedSingleTeamData = () => {
-    console.log('onButtonExtendedSingleTeamData');
   }
   onButtonExtendedTeamPairData = () => {
     console.log('onButtonExtendedTeamPairData');
