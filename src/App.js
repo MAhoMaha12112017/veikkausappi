@@ -108,7 +108,7 @@ class App extends Component {
       homeaway: this.state.homeaway || undefined,
       team: this.state.selectedTeam || undefined
     }
-    console.log(searchBody);
+    console.log('onButtonSearch.searchBody', searchBody);
 
     fetch('http://localhost:3001/matchsearch', {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -128,7 +128,10 @@ class App extends Component {
   }
 
   onButtonExtendedSingleTeamData = () => {
-    const searchBody = {team: this.state.selectedTeam || undefined}
+    const searchBody = {
+      team: this.state.selectedTeam || undefined,
+      homeaway: this.state.homeaway || undefined
+    }
     fetch('http://localhost:3001/teamdata', {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: { "Content-Type": "application/json; charset=utf-8" },
@@ -192,7 +195,7 @@ class App extends Component {
                 <button onClick={this.onButtonExtendedSingleTeamData}>Extended Single Team Data</button>
                 <hr />
                 <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
-                <button onClick={this.onButtonSearch}>Hae</button>
+                <button onClick={this.onButtonSearch}>Hae otteludata</button>
                 <button onClick={this.onClickSearchReset} type="button">Tyhjennä</button>
               </div>
             :
