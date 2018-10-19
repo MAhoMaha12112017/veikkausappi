@@ -8,6 +8,7 @@ import Liigat from './components/Liigat/Liigat';
 import HomeAway from './components/HomeAway/HomeAway';
 import teamList from './components/Joukkueet/joukkuelista.js';
 import footballicon from './icons8-soccer-ball-48.png';
+import fetchteamdata from './helpers/fetchteamdata';
 
 
 const defaults = {
@@ -132,15 +133,35 @@ class App extends Component {
       team: this.state.selectedTeam || undefined,
       homeaway: this.state.homeaway || undefined
     }
-    fetch('http://localhost:3001/teamdata', {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify(searchBody) 
-    })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-    })
+    let routeAddress = '';
+    let homeData = {};
+    let awayData = {};
+    
+    if (this.state.homeaway === 'home') {
+      fetchteamdata('http://localhost:3001/teamhomedata', searchBody)
+      .then(response => {
+        console.log('home', response);
+        homeData = response;
+      });
+    } else if (this.state.homeaway === 'away') {
+      fetchteamdata('http://localhost:3001/teamawaydata', searchBody)
+      .then(response => {
+        console.log('away', response);
+        awayData = response;
+      });
+    } else if (this.state.homeaway === 'all') {
+      console.log('haetaan molemmat ja yhdistetään data');
+      fetchteamdata('http://localhost:3001/teamhomedata', searchBody)
+      .then(response => {
+        console.log('home', response);
+        homeData = response;
+      });
+      fetchteamdata('http://localhost:3001/teamawaydata', searchBody)
+      .then(response => {
+        console.log('away', response);
+        awayData = response;
+      });
+    }
   }
 
   onClickReset = () => {
