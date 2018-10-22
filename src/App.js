@@ -133,35 +133,49 @@ class App extends Component {
       team: this.state.selectedTeam || undefined,
       homeaway: this.state.homeaway || undefined
     }
-    let routeAddress = '';
+    
     let homeData = {};
     let awayData = {};
     
     if (this.state.homeaway === 'home') {
-      fetchteamdata('http://localhost:3001/teamhomedata', searchBody)
+      console.log('searchBody.homeaway ', searchBody.homeaway)
+      fetchteamdata('http://localhost:3001/teamdata', searchBody)
       .then(response => {
         console.log('home', response);
         homeData = response;
       });
     } else if (this.state.homeaway === 'away') {
-      fetchteamdata('http://localhost:3001/teamawaydata', searchBody)
+      fetchteamdata('http://localhost:3001/teamdata', searchBody)
       .then(response => {
         console.log('away', response);
         awayData = response;
       });
     } else if (this.state.homeaway === 'all') {
       console.log('haetaan molemmat ja yhdistetään data');
-      fetchteamdata('http://localhost:3001/teamhomedata', searchBody)
+      searchBody.homeaway = 'home';
+      fetchteamdata('http://localhost:3001/teamdata', searchBody)
       .then(response => {
         console.log('home', response);
         homeData = response;
       });
-      fetchteamdata('http://localhost:3001/teamawaydata', searchBody)
+      searchBody.homeaway = 'away';
+      fetchteamdata('http://localhost:3001/teamdata', searchBody)
       .then(response => {
         console.log('away', response);
         awayData = response;
       });
     }
+    
+  }
+
+  // extendedResults extendedResults
+  
+  mergeHomeAndAwayData = (homeData, awayData) => {
+    const goals = homeData.allHomeGoals + awayData.allAwayGoals;
+    const xGoals = homeData.allHomeXG + awayData.allAwayXG; 
+    const wins = homeData.wins + awayData.wins;
+    const draws = homeData.draws + awayData.draws;
+    const losses = homeData.losses + awayData.losses;
   }
 
   onClickReset = () => {
