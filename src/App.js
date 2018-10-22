@@ -24,8 +24,8 @@ const defaults = {
   homeaway: 'all',
   selectedTeam: '',
   use: 'save',
-  results: {}
-  // extendedResults: {}
+  results: {},
+  extendedResults: {}
 }
 
 class App extends Component {
@@ -134,49 +134,45 @@ class App extends Component {
       homeaway: this.state.homeaway || undefined
     }
     
-    let homeData = {};
-    let awayData = {};
+    // let homeData = {};
+    // let awayData = {};
+    // let response = {};
+    // let extendedResults = {};
     
-    if (this.state.homeaway === 'home') {
+   
+    if (this.state.homeaway === 'home' || this.state.homeaway === 'away') {
       console.log('searchBody.homeaway ', searchBody.homeaway)
       fetchteamdata('http://localhost:3001/teamdata', searchBody)
       .then(response => {
-        console.log('home', response);
-        homeData = response;
+        console.log('home or away', response);
+        this.setState({use: 'extendedSearch', extendedResults: response});
       });
-    } else if (this.state.homeaway === 'away') {
-      fetchteamdata('http://localhost:3001/teamdata', searchBody)
-      .then(response => {
-        console.log('away', response);
-        awayData = response;
-      });
-    } else if (this.state.homeaway === 'all') {
+    } else if (this.state.homeaway === 'all') {  // todo, oltava yhdistetty data, mergeHomeAndAwayData?
       console.log('haetaan molemmat ja yhdistetään data');
       searchBody.homeaway = 'home';
       fetchteamdata('http://localhost:3001/teamdata', searchBody)
       .then(response => {
         console.log('home', response);
-        homeData = response;
+        // extendedResults = response;
       });
       searchBody.homeaway = 'away';
       fetchteamdata('http://localhost:3001/teamdata', searchBody)
       .then(response => {
         console.log('away', response);
-        awayData = response;
+        // extendedResults = response;
       });
     }
-    
+    console.log('this.state.extendedResults', this.state.extendedResults);
   }
 
   // extendedResults extendedResults
-  
-  mergeHomeAndAwayData = (homeData, awayData) => {
-    const goals = homeData.allHomeGoals + awayData.allAwayGoals;
-    const xGoals = homeData.allHomeXG + awayData.allAwayXG; 
-    const wins = homeData.wins + awayData.wins;
-    const draws = homeData.draws + awayData.draws;
-    const losses = homeData.losses + awayData.losses;
-  }
+  // mergeHomeAndAwayData = (homeData, awayData) => {
+  //   const goals = homeData.allHomeGoals + awayData.allAwayGoals;
+  //   const xGoals = homeData.allHomeXG + awayData.allAwayXG; 
+  //   const wins = homeData.wins + awayData.wins;
+  //   const draws = homeData.draws + awayData.draws;
+  //   const losses = homeData.losses + awayData.losses;
+  // }
 
   onClickReset = () => {
     this.setState(defaults);
@@ -192,18 +188,10 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/>
-          <h1 className="App-title">Veikkausappi</h1>
-        </header>
-        <Navigation onUseChange={this.onUseChange} onClickTable={this.onClickTable}/>
-
-        <div>
-        {
-          this.state.use === 'results'
-          ? 
+    let show = '';
+    
+      if (this.state.use === 'results') {
+        show =  
           <div>
             <h3>Match Results</h3>
             <ul>
@@ -214,39 +202,51 @@ class App extends Component {
             })}
             </ul>
           </div>
-          : (
-            this.state.use === 'search' 
-            ?
-              <div>
-                <Liigat onLeagueChange={this.onLeagueChange} labeli="League" currentValue={this.state.league}/>
-                <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
-                <p>Team Pair Data:</p>
-                <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Team 1" league={this.state.league} currentValue={this.state.homeTeam}/>
-                <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Team 2" league={this.state.league} currentValue={this.state.awayTeam}/>
-                <button onClick={this.onButtonExtendedTeamPairData}>Extended Team Pair Data</button>
-                <hr />
-                <Joukkueet onTeamChange={this.onSelectedTeamChange} labeli="Single Team Match Data" league={this.state.league} currentValue={this.state.selectedTeam}/>
-                <HomeAway onHomeAwayChange={this.onHomeAwayChange} labeli="Home / Away" currentValue={this.state.homeaway} />
-                <button onClick={this.onButtonExtendedSingleTeamData}>Extended Single Team Data</button>
-                <hr />
-                <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
-                <button onClick={this.onButtonSearch}>Hae otteludata</button>
-                <button onClick={this.onClickSearchReset} type="button">Tyhjennä</button>
-              </div>
-            :
-              <div>
-                <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" league={this.state.league} currentValue={this.state.homeTeam}/>
-                <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" league={this.state.league} currentValue={this.state.awayTeam}/>
-                <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" currentValue={this.state.homeGoals}/>
-                <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" currentValue={this.state.awayGoals}/>
-                <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" currentValue={this.state.homexG}/>
-                <Tulos onResultChange={this.onChangeawayxG} labeli="Away xG" currentValue={this.state.awayxG}/>
-                <button onClick={this.onButtonSave}>Lähetä</button>
-                <button onClick={this.onClickReset} type="button">Tyhjennä</button>
-              </div>
-            )
-        } 
+      }
+      else if (this.state.use === 'search' ) {
+        show = (
+            <div>
+              <Liigat onLeagueChange={this.onLeagueChange} labeli="League" currentValue={this.state.league}/>
+              <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
+              <p>Team Pair Data:</p>
+              <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Team 1" league={this.state.league} currentValue={this.state.homeTeam}/>
+              <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Team 2" league={this.state.league} currentValue={this.state.awayTeam}/>
+              <button onClick={this.onButtonExtendedTeamPairData}>Extended Team Pair Data</button>
+              <hr />
+              <Joukkueet onTeamChange={this.onSelectedTeamChange} labeli="Single Team Match Data" league={this.state.league} currentValue={this.state.selectedTeam}/>
+              <HomeAway onHomeAwayChange={this.onHomeAwayChange} labeli="Home / Away" currentValue={this.state.homeaway} />
+              <button onClick={this.onButtonExtendedSingleTeamData}>Extended Single Team Data</button>
+              <hr />
+              <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
+              <button onClick={this.onButtonSearch}>Hae otteludata</button>
+              <button onClick={this.onClickSearchReset} type="button">Tyhjennä</button>
+            </div>
+        )
+      } else { 
+        show =  (
+        <div>
+          <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" league={this.state.league} currentValue={this.state.homeTeam}/>
+          <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" league={this.state.league} currentValue={this.state.awayTeam}/>
+          <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" currentValue={this.state.homeGoals}/>
+          <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" currentValue={this.state.awayGoals}/>
+          <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" currentValue={this.state.homexG}/>
+          <Tulos onResultChange={this.onChangeawayxG} labeli="Away xG" currentValue={this.state.awayxG}/>
+          <button onClick={this.onButtonSave}>Lähetä</button>
+          <button onClick={this.onClickReset} type="button">Tyhjennä</button>
         </div>
+      )
+      
+    }
+
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/>
+          <h1 className="App-title">Veikkausappi</h1>
+        </header>
+        <Navigation onUseChange={this.onUseChange} onClickTable={this.onClickTable}/>
+        {show}
+        
       </div>
     );
   }
