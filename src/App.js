@@ -10,7 +10,6 @@ import teamList from './components/Joukkueet/joukkuelista.js';
 import footballicon from './icons8-soccer-ball-48.png';
 import fetchteamdata from './helpers/fetchteamdata';
 
-
 const defaults = {
   id: 0,
   league: teamList[0].league,
@@ -149,24 +148,28 @@ class App extends Component {
       fetchteamdata('http://localhost:3001/teamdata', searchBody)
       .then(response => {
         console.log('home or away', response);
-        this.setState({use: 'extendedSearch', extendedResults: response}); // toteutus puuttuu
+        this.setState({use: 'extendedSearch', extendedResults: response}); // toteutus puuttuu?
       });
     } else if (this.state.homeaway === 'all') {  // todo, oltava yhdistetty data, mergeHomeAndAwayData?
+        let merge1 = {};
+        let merge2 = {};
         console.log('haetaan molemmat ja yhdistetään data');
         searchBody.homeaway = 'home';
         fetchteamdata('http://localhost:3001/teamdata', searchBody)
         .then(response => {
           console.log( 'home', response);
-          // extendedResults = response;
+          merge1 = {...response};
         });
         searchBody.homeaway = 'away';
         fetchteamdata('http://localhost:3001/teamdata', searchBody)
         .then(response => {
           console.log('away ', response);
-          // extendedResults = response;
+          merge2 = {...response};
         });
+        console.log('merge1 ', merge1);
+        console.log('merge2 ', merge2);
     }
-    console.log('this.state.extendedResults', this.state.extendedResults);
+    // console.log('this.state.extendedResults', this.state.extendedResults);
   }
 
   // extendedResults extendedResults
@@ -238,26 +241,44 @@ class App extends Component {
           <button onClick={this.onButtonSave}>Lähetä</button>
           <button onClick={this.onClickReset} type="button">Tyhjennä</button>
         </div>
-      )
-      
+        ) 
+      } else if (this.state.use === 'extendedSearch') {
+        show = ( 
+          show =  
+          <div>
+            <h3>{this.state.selectedTeam} - {this.state.homeaway} games</h3>
+            <ul>
+              <li>HomeGoals: {this.state.extendedResults.HomeGoals} </li>
+              <li>AwayGoals: {this.state.extendedResults.AwayGoals} </li>
+              <li>HomeXG: {this.state.extendedResults.HomeXG} </li>
+              <li>AwayXG: {this.state.extendedResults.AwayXG} </li>
+              <li>avgHomeGoals: {this.state.extendedResults.avgHomeGoals} </li>
+              <li>avgAwayGoals: {this.state.extendedResults.avgAwayGoals} </li>
+              <li>avgHomeXG: {this.state.extendedResults.avgHomeXG} </li>
+              <li>avgAwayXG: {this.state.extendedResults.avgAwayXG} </li>
+              <li>draws: {this.state.extendedResults.draws} </li>
+              <li>losses: {this.state.extendedResults.losses} </li>
+              <li>wins: {this.state.extendedResults.wins} </li>
+            </ul>
+          </div>
+        )
+      }
+      return (
+        <div className="App">
+          <header className="App-header">
+            <img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/>
+            <h1 className="App-title">Veikkausappi</h1>
+          </header>
+          <Navigation onUseChange={this.onUseChange} onClickTable={this.onClickTable}/>
+          {show}
+          
+        </div>
+      );
     }
-
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/><img src={footballicon} alt="football icon"/>
-          <h1 className="App-title">Veikkausappi</h1>
-        </header>
-        <Navigation onUseChange={this.onUseChange} onClickTable={this.onClickTable}/>
-        {show}
-        
-      </div>
-    );
-  }
 }
+
 
 export default App;
 
 // TODO:
-// yhdistä funktiot?
 // lisää liiga - tulisiko olla yksi listaelementti: liiga + joukkue children-tekn?
