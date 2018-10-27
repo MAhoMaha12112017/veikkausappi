@@ -6,6 +6,9 @@ import Navigation from './components/Navigation/Navigation';
 import Tulos from './components/Tulos/Tulos';
 import Liigat from './components/Liigat/Liigat';
 import HomeAway from './components/HomeAway/HomeAway';
+import Search from './components/Search/Search';
+import ExtendedData from './components/ExtendedData/ExtendedData';
+import MatchResults from './components/MatchResults/MatchResults';
 import teamList from './components/Joukkueet/joukkuelista.js';
 import footballicon from './icons8-soccer-ball-48.png';
 import fetchteamdata from './helpers/fetchteamdata';
@@ -118,7 +121,7 @@ class App extends Component {
     .then((data) => {
       if (data[0].id) {
         console.log(data);
-        this.setState({use: 'results', results: data}); // siirto results-näytölle
+        this.setState({use: 'matchresults', results: data}); // siirto results-näytölle
       } else {
         alert('data not found')
       }
@@ -138,19 +141,19 @@ class App extends Component {
       fetchteamdata('http://localhost:3001/teamdata', searchBody)
       .then(response => {
         console.log('home or away', response);
-        this.setState({use: 'extendedSearch', extendedResults: response}); // toteutus puuttuu?
+        this.setState({use: 'extendedData', extendedResults: response}); // toteutus puuttuu?
       });
     } else if (this.state.homeaway === 'all') {  // todo, oltava yhdistetty data, mergeHomeAndAwayData?
         console.log('haetaan molemmat ja yhdistetään data');
         searchBody.homeaway = 'home';
         fetchteamdata('http://localhost:3001/teamdata', searchBody)
         .then(response => {
-          this.setState({use: 'extendedSearch', homeResults: response});
+          this.setState({use: 'extendedData', homeResults: response});
         });
         searchBody.homeaway = 'away';
         fetchteamdata('http://localhost:3001/teamdata', searchBody)
         .then(response => {
-          this.setState({use: 'extendedSearch', awayResults: response});
+          this.setState({use: 'extendedData', awayResults: response});
         });
     }
   }
@@ -194,37 +197,30 @@ class App extends Component {
     // different data showed based to state.use
     let show = '';
     
-      if (this.state.use === 'results') { // hakutulokset - yks.joukkue?
-        show =  
-          <div>
-            <h3>Match Results</h3>
-            <ul>
-            {this.state.results.map((result) => {
-              return (
-                <li key={result.id}>Kierros {result.round}. {result.hometeamabbr} - {result.awayteamabbr}: {result.awaygoals} - {result.homegoals} xG: {result.homexg} - {result.awayxg} </li>
-              );
-            })}
-            </ul>
-          </div>
-      }
-      else if (this.state.use === 'search' ) { // hakuikkuna
+      if (this.state.use === 'matchresults') { 
+        show =  <MatchResults results={this.state.results} />
+      } else if (this.state.use === 'extendedData') { 
+        show = 
+          <ExtendedData selectedTeam={this.state.selectedTeam} homeaway={this.state.homeaway} extendedResults={this.state.extendedResults}/>
+      } else if (this.state.use === 'search' ) { // hakuikkuna
         show = (
-            <div>
-              <Liigat onLeagueChange={this.onLeagueChange} labeli="League" currentValue={this.state.league}/>
-              <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
-              <p>Team Pair Data:</p>
-              <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Team 1" league={this.state.league} currentValue={this.state.homeTeam}/>
-              <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Team 2" league={this.state.league} currentValue={this.state.awayTeam}/>
-              <button onClick={this.onButtonExtendedTeamPairData}>Extended Team Pair Data</button>
-              <hr />
-              <Joukkueet onTeamChange={this.onSelectedTeamChange} labeli="Single Team Match Data" league={this.state.league} currentValue={this.state.selectedTeam}/>
-              <HomeAway onHomeAwayChange={this.onHomeAwayChange} labeli="Home / Away" currentValue={this.state.homeaway} />
-              <button onClick={this.onButtonExtendedSingleTeamData}>Extended Single Team Data</button>
-              <hr />
-              <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
-              <button onClick={this.onButtonSearch}>Hae otteludata</button>
-              <button onClick={this.onClickSearchReset} type="button">Tyhjennä</button>
-            </div>
+          <div>
+            <Search />
+            <Liigat onLeagueChange={this.onLeagueChange} labeli="League" currentValue={this.state.league}/>
+            <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
+            <p>Team Pair Data:</p>
+            <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Team 1" league={this.state.league} currentValue={this.state.homeTeam}/>
+            <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Team 2" league={this.state.league} currentValue={this.state.awayTeam}/>
+            <button onClick={this.onButtonExtendedTeamPairData}>Extended Team Pair Data</button>
+            <hr />
+            <Joukkueet onTeamChange={this.onSelectedTeamChange} labeli="Single Team Match Data" league={this.state.league} currentValue={this.state.selectedTeam}/>
+            <HomeAway onHomeAwayChange={this.onHomeAwayChange} labeli="Home / Away" currentValue={this.state.homeaway} />
+            <button onClick={this.onButtonExtendedSingleTeamData}>Extended Single Team Data</button>
+            <hr />
+            <Tulos onResultChange={this.onChangeId} labeli="Id" currentValue={this.state.id} />
+            <button onClick={this.onButtonSearch}>Hae otteludata</button>
+            <button onClick={this.onClickSearchReset} type="button">Tyhjennä</button>
+          </div>
         )
       } else if (this.state.use === 'save') {  // syöttöikkuna 
         show =  (
@@ -240,28 +236,7 @@ class App extends Component {
           <button onClick={this.onClickReset} type="button">Tyhjennä</button>
         </div>
         ) 
-      } else if (this.state.use === 'extendedSearch') { // laajennettu tulosikkuna
-        
-        show = ( 
-          show =  
-          <div>
-            <h3>{this.state.selectedTeam} - {this.state.homeaway} games</h3>
-            <ul>
-              <li>HomeGoals: {this.state.extendedResults.HomeGoals} </li>
-              <li>AwayGoals: {this.state.extendedResults.AwayGoals} </li>
-              <li>HomeXG: {this.state.extendedResults.HomeXG} </li>
-              <li>AwayXG: {this.state.extendedResults.AwayXG} </li>
-              <li>avgHomeGoals: {this.state.extendedResults.avgHomeGoals} </li>
-              <li>avgAwayGoals: {this.state.extendedResults.avgAwayGoals} </li>
-              <li>avgHomeXG: {this.state.extendedResults.avgHomeXG} </li>
-              <li>avgAwayXG: {this.state.extendedResults.avgAwayXG} </li>
-              <li>draws: {this.state.extendedResults.draws} </li>
-              <li>losses: {this.state.extendedResults.losses} </li>
-              <li>wins: {this.state.extendedResults.wins} </li>
-            </ul>
-          </div>
-        )
-      }
+      } 
 
       return (
         <div className="App">
