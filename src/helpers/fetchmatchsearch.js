@@ -1,4 +1,4 @@
-const fetchteamdata = (routeAddress, searchBody) => {
+const fetchmatchsearch = (routeAddress, searchBody) => {
   return fetch(routeAddress, { // miksi return?
     method: "POST", // *GET, POST, PUT, DELETE, etc.
     headers: { "Content-Type": "application/json; charset=utf-8" },
@@ -9,8 +9,8 @@ const fetchteamdata = (routeAddress, searchBody) => {
     // console.log(data);
     return data;
   })
-  .catch(err => console.log('fetchteamdata', err));
+  .catch(err => console.log('fetchmatchsearch', err));
 };
 
-export default fetchteamdata;
+export default fetchmatchsearch;
 
