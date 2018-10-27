@@ -7,7 +7,7 @@ const MatchResults = ({results}) => {
       <ul>
       {results.map((result) => {
         return (
-          <li key={result.id}>Kierros {result.round}. {result.hometeamabbr} - {result.awayteamabbr}: {result.awaygoals} - {result.homegoals} xG: {result.homexg} - {result.awayxg} </li>
+          <li key={result.id}>Kierros {result.round}. {result.hometeamabbr} - {result.awayteamabbr}: {result.homegoals} - {result.awaygoals} xG: {result.homexg} - {result.awayxg} </li>
         );
       })}
       </ul>
