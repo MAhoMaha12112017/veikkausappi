@@ -7,12 +7,13 @@ import Tulos from './components/Tulos/Tulos';
 import Liigat from './components/Liigat/Liigat';
 import HomeAway from './components/HomeAway/HomeAway';
 import Search from './components/Search/Search';
+import SaveMatch from './components/SaveMatch/SaveMatch';
 import ExtendedData from './components/ExtendedData/ExtendedData';
 import MatchResults from './components/MatchResults/MatchResults';
 import teamList from './components/Joukkueet/joukkuelista.js';
 import footballicon from './icons8-soccer-ball-48.png';
 import fetchteamdata from './helpers/fetchteamdata';
-import savematchdata from './helpers/savematchdata';
+// import savematchdata from './helpers/savematchdata';
 import fetchmatchsearch from './helpers/fetchmatchsearch';
 
 
@@ -92,17 +93,17 @@ class App extends Component {
     }
   }
 
-  onButtonSave = () => {
-    savematchdata('http://localhost:3001/match', this.state)
-    .then((data) => {
-      console.log('savematchdata, returned data ', data);
-      if (data.id) {
-        alert(`Match between ${data.hometeamabbr} and ${data.awayteamabbr} added to database`)
-      } else {
-        alert(`Match could not be added to database`);
-      }
-    });
-  }
+  // onButtonSave = () => {
+  //   savematchdata('http://localhost:3001/match', this.state)
+  //   .then((data) => {
+  //     console.log('savematchdata, returned data ', data);
+  //     if (data.id) {
+  //       alert(`Match between ${data.hometeamabbr} and ${data.awayteamabbr} added to database`)
+  //     } else {
+  //       alert(`Match could not be added to database`);
+  //     }
+  //   });
+  // }
 
   // datan haku - perusdata
   onButtonSearch = () => {
@@ -201,7 +202,7 @@ class App extends Component {
         show =  <MatchResults results={this.state.results} />
       } else if (this.state.use === 'extendedData') { 
         show = 
-          <ExtendedData selectedTeam={this.state.selectedTeam} homeaway={this.state.homeaway} extendedResults={this.state.extendedResults}/>
+          <ExtendedData extendedResults={this.state.extendedResults} selectedTeam={this.state.selectedTeam} homeaway={this.state.homeaway} />
       } else if (this.state.use === 'search' ) { // hakuikkuna
         show = (
           <div>
@@ -224,17 +225,8 @@ class App extends Component {
         )
       } else if (this.state.use === 'save') {  // syöttöikkuna 
         show =  (
-        <div>
-          <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
-          <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" league={this.state.league} currentValue={this.state.homeTeam}/>
-          <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" league={this.state.league} currentValue={this.state.awayTeam}/>
-          <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" currentValue={this.state.homeGoals}/>
-          <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" currentValue={this.state.awayGoals}/>
-          <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" currentValue={this.state.homexG}/>
-          <Tulos onResultChange={this.onChangeawayxG} labeli="Away xG" currentValue={this.state.awayxG}/>
-          <button onClick={this.onButtonSave}>Lähetä</button>
-          <button onClick={this.onClickReset} type="button">Tyhjennä</button>
-        </div>
+        <SaveMatch />
+        
         ) 
       } 
 
@@ -253,3 +245,16 @@ class App extends Component {
 
 export default App;
 
+{/*
+<div>
+          <Tulos onResultChange={this.onChangeRound} labeli="Round" currentValue={this.state.round} />
+          <Joukkueet onTeamChange={this.onHomeTeamChange} labeli="Home" league={this.state.league} currentValue={this.state.homeTeam}/>
+          <Joukkueet onTeamChange={this.onAwayTeamChange} labeli="Away" league={this.state.league} currentValue={this.state.awayTeam}/>
+          <Tulos onResultChange={this.onChangehomeGoals} labeli="Home Goals" currentValue={this.state.homeGoals}/>
+          <Tulos onResultChange={this.onChangeawayGoals} labeli="Away Goals" currentValue={this.state.awayGoals}/>
+          <Tulos onResultChange={this.onChangehomexG} labeli="Home xG" currentValue={this.state.homexG}/>
+          <Tulos onResultChange={this.onChangeawayxG} labeli="Away xG" currentValue={this.state.awayxG}/>
+          <button onClick={this.onButtonSave}>Lähetä</button>
+          <button onClick={this.onClickReset} type="button">Tyhjennä</button>
+        </div>
+*/}
