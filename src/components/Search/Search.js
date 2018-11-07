@@ -42,7 +42,7 @@ class Search extends Component {
     .then((data) => {
       if (data[0].id) {
         console.log(data);
-        this.setState({results: data}); // use: 'matchresults', siirto results-näytölle 
+        this.props.showMatchData(data);
       } else {
         alert('data not found')
       }
@@ -62,19 +62,24 @@ class Search extends Component {
       fetchteamdata('http://localhost:3001/teamdata', searchBody)
       .then(response => {
         console.log('home or away', response);
-        this.setState({extendedResults: response}); // use: 'extendedData', toteutus puuttuu? 
+        this.props.showExtendedData(response);
+        // this.setState({extendedResults: response}); // use: 'extendedData', toteutus puuttuu? 
+        
       });
     } else if (this.state.homeaway === 'all') {  // todo, oltava yhdistetty data, mergeHomeAndAwayData?
         console.log('haetaan molemmat ja yhdistetään data');
         searchBody.homeaway = 'home';
         fetchteamdata('http://localhost:3001/teamdata', searchBody)
         .then(response => {
-          this.setState({homeResults: response}); // use: 'extendedData', 
+          this.props.showExtendedData(response);
+          // this.setState({extendedResults: response}); // use: 'extendedData', 
+          
         });
         searchBody.homeaway = 'away';
         fetchteamdata('http://localhost:3001/teamdata', searchBody)
         .then(response => {
-          this.setState({awayResults: response}); // use: 'extendedData', 
+          this.props.showExtendedData(response);
+          // this.setState({extendedResults: response}); // , 
         });
     }
   }
